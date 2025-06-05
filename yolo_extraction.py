@@ -4,14 +4,21 @@
 import math
 from ultralytics import YOLO
 import cv2
-from google.colab.patches import cv2_imshow
+#from google.colab.patches import cv2_imshow
 import numpy as np
+import tensorflow as tf
 
 #!pip install ultralytics
 #!pip install opencv-python
 
 def yolo8_bounding_boxes_with_distance(image_path):
+    #print(image_path) 
+    # If image_path is a tensor, decode it
+    if isinstance(image_path, tf.Tensor):
+        image_path = image_path.numpy().decode('utf-8')
+        
     model = YOLO("yolov8l.pt")
+    model.to('cuda')
     frame = cv2.imread(image_path)
     frame = cv2.cvtColor(frame, cv2.COLOR_BGR2RGB)
     bboxes = model.predict(frame)
